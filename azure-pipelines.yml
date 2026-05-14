@@ -7,9 +7,14 @@ pool:
 steps:
 - checkout: self
 
+- script: |
+    echo "Project structure:"
+    find . -name pom.xml
+  displayName: 'Find pom.xml'
+
 - task: Maven@4
   inputs:
-    mavenPomFile: 'pom.xml'
+    mavenPomFile: '**/pom.xml'
     goals: 'clean package'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
@@ -19,6 +24,6 @@ steps:
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: 'target'
+    PathtoPublish: '**/target'
     ArtifactName: 'drop'
     publishLocation: 'Container'
