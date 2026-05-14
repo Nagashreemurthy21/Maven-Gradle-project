@@ -2,28 +2,27 @@ trigger:
 - main
 
 pool:
-  vmImage: ubuntu-latest
+  name: NagashreeAgent
 
 steps:
-- checkout: self
 
-- script: |
-    echo "Project structure:"
-    find . -name pom.xml
-  displayName: 'Find pom.xml'
+- checkout: self
+  displayName: 'Checkout Source Code'
 
 - task: Maven@4
+  displayName: 'Build Maven Project'
   inputs:
-    mavenPomFile: '**/pom.xml'
+    mavenPomFile: 'pom.xml'
     goals: 'clean package'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.17'
+    javaHomeOption: 'Path'
+    jdkDirectory: 'C:\Program Files\Eclipse Adoptium\jdk-17.0.17.10-hotspot'
     mavenVersionOption: 'Default'
 
 - task: PublishBuildArtifacts@1
+  displayName: 'Publish Build Artifacts'
   inputs:
-    PathtoPublish: '**/target'
+    PathtoPublish: 'target'
     ArtifactName: 'drop'
     publishLocation: 'Container'
